@@ -17,7 +17,7 @@ module.exports = {
             resolve(isAuthorized);
           } else {
             isAuthorized = false;
-            alert("Wrong username or Password");
+            reject("Wrong username or Password");
           }
         })
         .catch(function(error) {
