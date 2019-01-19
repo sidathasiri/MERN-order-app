@@ -13,7 +13,8 @@ export default class AddOrder extends Component {
       seletedItem: {},
       seletedItemQty: 0,
       total: 0,
-      toDashboard: false
+      toDashboard: false,
+      error: ""
     };
 
     this.findTotal = this.findTotal.bind(this);
@@ -47,36 +48,42 @@ export default class AddOrder extends Component {
   }
 
   addItem() {
-    let currentItems = this.state.addedItems;
-    let addingItem = {
-      item: this.state.seletedItem,
-      qty: this.state.seletedItemQty
-    };
-    //if adding item exists in current items: increase
-    //else add new
-    let alreadyExists = false;
-    for (let i = 0; i < currentItems.length; i++) {
-      if (currentItems[i].item._id == addingItem.item._id) {
-        alreadyExists = true;
-        currentItems[i].qty =
-          parseInt(currentItems[i].qty) + parseInt(addingItem.qty);
+    if (parseInt(this.state.seletedItemQty) > 0) {
+      let currentItems = this.state.addedItems;
+      let addingItem = {
+        item: this.state.seletedItem,
+        qty: this.state.seletedItemQty
+      };
+      //if adding item exists in current items: increase
+      //else add new
+      let alreadyExists = false;
+      for (let i = 0; i < currentItems.length; i++) {
+        if (currentItems[i].item._id == addingItem.item._id) {
+          alreadyExists = true;
+          currentItems[i].qty =
+            parseInt(currentItems[i].qty) + parseInt(addingItem.qty);
+          this.setState(
+            {
+              addedItems: currentItems,
+              error: ""
+            },
+            () => this.findTotal()
+          );
+          break;
+        }
+      }
+      if (!alreadyExists) {
+        currentItems.push(addingItem);
         this.setState(
           {
-            addedItems: currentItems
+            addedItems: currentItems,
+            error: ""
           },
           () => this.findTotal()
         );
-        break;
       }
-    }
-    if (!alreadyExists) {
-      currentItems.push(addingItem);
-      this.setState(
-        {
-          addedItems: currentItems
-        },
-        () => this.findTotal()
-      );
+    } else {
+      this.setState({ error: "Quantity should be non empty" });
     }
   }
 
@@ -121,53 +128,60 @@ export default class AddOrder extends Component {
       return <Redirect to="/dashboard" />;
     }
     return (
-      <div className="container">
-        <strong>Select Item:</strong>
-        <select
-          onChange={this.handleItemSelect.bind(this)}
-          className="form-control"
-          id="itemSelect"
-        >
-          {this.state.items.map((item, index) => {
-            return (
-              <option key={item._id} value={item._id}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <strong>Quantity:</strong>
-        <input
-          className="form-control"
-          type="number"
-          placeholder="Enter Quantity"
-          onChange={this.handleQtyChange.bind(this)}
-        />
-        <button
-          className="btn btn-success"
-          style={{ marginTop: 20, marginBottom: 20 }}
-          onClick={this.addItem.bind(this)}
-        >
-          Add Item
-        </button>
-
-        <button
-          disabled={this.state.addedItems.length == 0}
-          className="btn btn-success"
-          style={{ marginTop: 20, marginBottom: 20, marginLeft: 10 }}
-          onClick={this.submitOrder.bind(this)}
-        >
-          Submit Order
-        </button>
-        <br />
-        <span>
-          <strong>Total:</strong>
-          {this.state.total}
-        </span>
-
-        {this.state.addedItems.length > 0 ? (
-          <ItemList items={this.state.addedItems} />
+      <div>
+        {this.state.error ? (
+          <div className="alert alert-danger" role="alert">
+            {this.state.error}
+          </div>
         ) : null}
+        <div className="container">
+          <strong>Select Item:</strong>
+          <select
+            onChange={this.handleItemSelect.bind(this)}
+            className="form-control"
+            id="itemSelect"
+          >
+            {this.state.items.map((item, index) => {
+              return (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          <strong>Quantity:</strong>
+          <input
+            className="form-control"
+            type="number"
+            placeholder="Enter Quantity"
+            onChange={this.handleQtyChange.bind(this)}
+          />
+          <button
+            className="btn btn-success"
+            style={{ marginTop: 20, marginBottom: 20 }}
+            onClick={this.addItem.bind(this)}
+          >
+            Add Item
+          </button>
+
+          <button
+            disabled={this.state.addedItems.length == 0}
+            className="btn btn-success"
+            style={{ marginTop: 20, marginBottom: 20, marginLeft: 10 }}
+            onClick={this.submitOrder.bind(this)}
+          >
+            Submit Order
+          </button>
+          <br />
+          <span>
+            <strong>Total:</strong>
+            {this.state.total}
+          </span>
+
+          {this.state.addedItems.length > 0 ? (
+            <ItemList items={this.state.addedItems} />
+          ) : null}
+        </div>
       </div>
     );
   }
