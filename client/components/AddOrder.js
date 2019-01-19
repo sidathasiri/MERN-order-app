@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 var axios = require("axios");
 
 import ItemList from "./ItemList";
@@ -135,13 +135,25 @@ export default class AddOrder extends Component {
       return <Redirect to="/dashboard" />;
     }
     return (
-      <div className="container">
+      <div className="container" style={{ marginTop: 50 }}>
         {this.state.error ? (
           <div className="alert alert-danger" role="alert">
             {this.state.error}
           </div>
         ) : null}
         <div className="container">
+          <h1>
+            Create New Order{" "}
+            <Link
+              to="/dashboard"
+              style={{ marginLeft: 640 }}
+              className="btn btn-primary"
+            >
+              Back
+            </Link>
+          </h1>
+          <hr />
+
           <strong>Select Item:</strong>
           <select
             onChange={this.handleItemSelect.bind(this)}

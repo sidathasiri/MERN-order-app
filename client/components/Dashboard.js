@@ -63,9 +63,32 @@ export default class Dashboard extends Component {
         >
           Add Order
         </Link>
+        {this.state.orders.length == 0 ? (
+          <h1
+            style={{
+              color: "#7d8184",
+              fontFamily: "Dancing Script",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 50,
+              fontSize: 80
+            }}
+          >
+            <i>You have no orders yet!</i>
+          </h1>
+        ) : null}
         {this.state.orders.map(order => {
           return (
-            <div key={order._id} style={{ marginBottom: 20 }} className="card">
+            <div
+              key={order._id}
+              className="card"
+              style={{
+                borderRadius: 20,
+                borderColor: "#adaba9",
+                marginBottom: 20,
+                boxShadow: "5px 5px 5px grey"
+              }}
+            >
               <div className="card-header">
                 Order ID: {order._id}{" "}
                 <button
@@ -81,12 +104,19 @@ export default class Dashboard extends Component {
                   return (
                     <img
                       key={item.item._id}
-                      style={{ height: 100, width: "auto" }}
+                      style={{
+                        height: 100,
+                        width: "auto",
+                        border: "1px solid grey",
+                        borderRadius: 15,
+                        marginRight: 10
+                      }}
                       src={item.item.imagePath}
                       alt="Card image cap"
                     />
                   );
                 })}
+                <hr />
                 <h5 className="card-title">Items: {order.items.length}</h5>
                 <p className="card-text">Price: {order.price}</p>
                 <p className="card-text">Placed on: {order.timestamp}</p>

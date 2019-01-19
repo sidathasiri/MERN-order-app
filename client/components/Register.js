@@ -71,7 +71,15 @@ export default class Register extends Component {
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: 30 }}
           >
-            <div className="col-md-6">
+            <div
+              className="col-md-6"
+              style={{
+                border: "1px solid #babbbc",
+                padding: 50,
+                borderRadius: 15,
+                boxShadow: "10px 10px 5px grey"
+              }}
+            >
               <h1>Register</h1>
               <form>
                 <div className="form-group">
@@ -85,9 +93,6 @@ export default class Register extends Component {
                     value={this.state.email}
                     onChange={this.handleChange.bind(this)}
                   />
-                  <small id="emailHelp" className="form-text text-muted">
-                    We'll never share your email with anyone else.
-                  </small>
                 </div>
                 <div className="form-group">
                   <label>Password</label>

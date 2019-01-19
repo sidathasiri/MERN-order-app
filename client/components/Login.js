@@ -67,7 +67,15 @@ export default class Login extends Component {
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: 30 }}
           >
-            <div className="col-md-6">
+            <div
+              className="col-md-6"
+              style={{
+                border: "1px solid #babbbc",
+                padding: 50,
+                borderRadius: 15,
+                boxShadow: "10px 10px 5px grey"
+              }}
+            >
               <h1>Login</h1>
               <form>
                 <div className="form-group">
