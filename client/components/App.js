@@ -5,6 +5,7 @@ import "../css/App.css";
 import Login from "./Login";
 import Navbar from "./Navbar";
 import Register from "./Register";
+import Auth from "../Auth";
 
 class App extends Component {
   render() {
@@ -40,16 +41,28 @@ class App extends Component {
             <small>Place your order today!</small>
           </div>
           <div className="row" style={{ marginTop: 20, marginLeft: 70 }}>
-            <Link
-              className="btn btn-primary btn-lg"
-              style={{ marginRight: 10 }}
-              to="/login"
-            >
-              Login
-            </Link>
-            <Link className="btn btn-primary btn-lg" to="/register">
-              Register
-            </Link>
+            {Auth.isAuthorized() ? (
+              <Link
+                className="btn btn-primary btn-lg"
+                style={{ marginRight: 10 }}
+                to="/dashboard"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <div>
+                <Link
+                  className="btn btn-primary btn-lg"
+                  style={{ marginRight: 10 }}
+                  to="/login"
+                >
+                  Login
+                </Link>
+                <Link className="btn btn-primary btn-lg" to="/register">
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
