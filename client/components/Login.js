@@ -54,7 +54,7 @@ export default class Login extends Component {
       return <Redirect to="/dashboard" />;
     } else {
       return (
-        <div>
+        <div className="container">
           {this.state.errors.length > 0 ? (
             <div className="alert alert-danger" role="alert">
               <ul>

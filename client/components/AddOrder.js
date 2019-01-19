@@ -83,7 +83,7 @@ export default class AddOrder extends Component {
         );
       }
     } else {
-      this.setState({ error: "Quantity should be non empty" });
+      this.setState({ error: "Quantity is not valid" });
     }
   }
 
@@ -128,7 +128,7 @@ export default class AddOrder extends Component {
       return <Redirect to="/dashboard" />;
     }
     return (
-      <div>
+      <div className="container">
         {this.state.error ? (
           <div className="alert alert-danger" role="alert">
             {this.state.error}
@@ -155,6 +155,7 @@ export default class AddOrder extends Component {
             type="number"
             placeholder="Enter Quantity"
             onChange={this.handleQtyChange.bind(this)}
+            onClick={() => this.setState({ error: "" })}
           />
           <button
             className="btn btn-success"
