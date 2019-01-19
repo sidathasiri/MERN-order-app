@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 var axios = require("axios");
 import AddItem from "./AddItem";
+import { resolve, reject } from "q";
 
 export default class Order extends Component {
   constructor(props) {
@@ -74,7 +75,9 @@ export default class Order extends Component {
       {
         order: currentState
       },
-      () => this.findTotal()
+      () => {
+        this.findTotal();
+      }
     );
   }
 
@@ -94,8 +97,33 @@ export default class Order extends Component {
         order: currentOrder,
         isItemsChanged: true
       },
-      () => this.findTotal()
+      () => {
+        this.findTotal();
+      }
     );
+  }
+
+  deleteOrder(orderId) {
+    console.log(orderId);
+    return new Promise((resolve, reject) => {
+      axios
+        .delete("/deleteOrder/" + orderId, {
+          headers: { Authorization: `Bearer ${localStorage.authToken}` }
+        })
+        .then(response => {
+          if (response.status == 200) {
+            console.log("deleted succesfully");
+            resolve(true);
+          } else {
+            reject(false);
+            alert("Error occurred in delete");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          reject(err);
+        });
+    });
   }
 
   findTotal() {
@@ -112,29 +140,39 @@ export default class Order extends Component {
 
   updateOrder() {
     self = this;
-    this.findTotal();
-    console.log("inside update");
-    console.log(this.state);
-    axios("/updateOrder", {
-      method: "put",
-      headers: {
-        Authorization: `Bearer ${localStorage.authToken}`
-      },
-      data: {
-        order: this.state.order
-      }
-    })
-      .then(function(response) {
-        console.log(response);
-        if (response.status == 200) {
+    if (this.state.order.items.length != 0) {
+      this.findTotal();
+      console.log("inside update");
+      console.log(this.state);
+      axios("/updateOrder", {
+        method: "put",
+        headers: {
+          Authorization: `Bearer ${localStorage.authToken}`
+        },
+        data: {
+          order: this.state.order
+        }
+      })
+        .then(function(response) {
+          console.log(response);
+          if (response.status == 200) {
+            self.setState({
+              toDashboard: true
+            });
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    } else {
+      this.deleteOrder(this.state.order._id).then(success => {
+        if (success) {
           self.setState({
             toDashboard: true
           });
         }
-      })
-      .catch(function(error) {
-        console.log(error);
       });
+    }
   }
 
   addItemButtonHandler() {
