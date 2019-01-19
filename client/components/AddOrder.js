@@ -14,7 +14,8 @@ export default class AddOrder extends Component {
       seletedItemQty: 0,
       total: 0,
       toDashboard: false,
-      error: ""
+      error: "",
+      selectedItemId: ""
     };
 
     this.findTotal = this.findTotal.bind(this);
@@ -28,7 +29,8 @@ export default class AddOrder extends Component {
     })
       .then(response => {
         this.setState({
-          items: response.data
+          items: response.data,
+          selectedItemId: response.data[0]._id
         });
       })
       .catch(err => console.log(err));
@@ -54,6 +56,11 @@ export default class AddOrder extends Component {
         item: this.state.seletedItem,
         qty: this.state.seletedItemQty
       };
+      if (Object.keys(addingItem.item).length == 0) {
+        addingItem.item = this.state.items.filter(
+          item => item._id == this.state.selectedItemId
+        )[0];
+      }
       //if adding item exists in current items: increase
       //else add new
       let alreadyExists = false;
@@ -140,6 +147,7 @@ export default class AddOrder extends Component {
             onChange={this.handleItemSelect.bind(this)}
             className="form-control"
             id="itemSelect"
+            value={this.state.selectedItemId}
           >
             {this.state.items.map((item, index) => {
               return (

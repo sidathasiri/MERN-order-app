@@ -7,7 +7,8 @@ export default class AddItem extends Component {
     this.state = {
       items: [],
       seletedItem: {},
-      seletedItemQty: 0
+      seletedItemQty: 0,
+      selectedItemId: ""
     };
   }
 
@@ -19,7 +20,8 @@ export default class AddItem extends Component {
     })
       .then(response => {
         this.setState({
-          items: response.data
+          items: response.data,
+          selectedItemId: response.data[0]._id
         });
       })
       .catch(err => console.log(err));
@@ -44,6 +46,19 @@ export default class AddItem extends Component {
         item: this.state.seletedItem,
         qty: this.state.seletedItemQty
       };
+      if (Object.keys(newItem.item).length == 0) {
+        newItem.item = this.state.items.filter(
+          item => item._id == this.state.selectedItemId
+        )[0];
+      }
+      console.log("new item");
+      console.log(this.state.selectedItemId);
+      console.log(
+        this.state.items.filter(
+          item => item._id == this.state.selectedItemId
+        )[0]
+      );
+      console.log(newItem);
       this.props.addNewItem(newItem);
       this.setState({
         error: ""
@@ -69,6 +84,7 @@ export default class AddItem extends Component {
             onChange={this.handleItemSelect.bind(this)}
             className="form-control"
             id="itemSelect"
+            value={this.state.selectedItemId}
           >
             {this.state.items.map((item, index) => {
               return (
