@@ -34,24 +34,30 @@ module.exports = {
   },
 
   register: (email, password) => {
-    axios
-      .post("/register", {
-        email: email,
-        password: password
-      })
-      .then(function(response) {
-        const { error, user } = response.data;
-        if (error) {
-          alert(error);
+    return new Promise((resolve, reject) => {
+      axios
+        .post("/register", {
+          email: email,
+          password: password
+        })
+        .then(function(response) {
+          const { error, token } = response.data;
+          console.log("received");
+          console.log(response.data);
+          if (error) {
+            reject(error);
+            isAuthorized = false;
+          } else {
+            localStorage.authToken = token;
+            isAuthorized = true;
+            resolve(isAuthorized);
+          }
+        })
+        .catch(function(error) {
+          reject(error);
           isAuthorized = false;
-        } else {
-          alert("Register succesful!");
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-        isAuthorized = false;
-      });
+        });
+    });
   },
   isAuthorized: () => {
     return isAuthorized || localStorage.authToken;

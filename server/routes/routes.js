@@ -37,9 +37,17 @@ router.post("/register", (req, res) => {
             });
           } else {
             console.log(`User saved`);
-            res.send({
-              user
-            });
+            jwt.sign(
+              { email: newUser.email, password: newUser.password },
+              "secret",
+              function(err, token) {
+                if (err) console.log(err);
+                else {
+                  console.log(token);
+                  res.send({ token });
+                }
+              }
+            );
           }
         });
       }
