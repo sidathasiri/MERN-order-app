@@ -93,16 +93,16 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/getOrders", checkToken, (req, res) => {
+router.get("/getOrders", checkToken, (req, res, next) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.send({ error: "Access denied! Please login again" });
+      next(err);
     } else {
       Order.find({ user: user.email }, (err, orders) => {
         if (err) {
           console.log(err);
-          res.send({ error: "Server Error! Please try again later" });
+          next(err);
         } else {
           res.send(orders);
         }
@@ -111,37 +111,35 @@ router.get("/getOrders", checkToken, (req, res) => {
   });
 });
 
-router.get("/getOrder/:id", checkToken, (req, res) => {
+router.get("/getOrder/:id", checkToken, (req, res, next) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.send({ error: "Access denied! Please login again" });
+      next(err);
     } else {
       Order.findOne({ _id: req.params.id }, (err, order) => {
         if (err) {
           console.log(err);
-          res.send({ error: "Server Error! Try again" });
+          next(err);
         } else {
-          if (order) {
-            res.send(order);
-          } else {
-            res.send({ error: "No such order found!" });
-          }
+          res.send(order);
         }
       });
     }
   });
 });
 
-router.get("/getItem/:id", checkToken, (req, res) => {
+router.get("/getItem/:id", checkToken, (req, res, next) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      next(err);
     } else {
       Item.findOne({ _id: req.params.id }, (err, item) => {
-        if (err) console.log(err);
-        else {
+        if (err) {
+          console.log(err);
+          next(err);
+        } else {
           res.send(item);
         }
       });
@@ -149,15 +147,17 @@ router.get("/getItem/:id", checkToken, (req, res) => {
   });
 });
 
-router.get("/getItems", checkToken, (req, res) => {
+router.get("/getItems", checkToken, (req, res, next) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      next(err);
     } else {
       Item.find({}, (err, items) => {
-        if (err) console.log(err);
-        else {
+        if (err) {
+          console.log(err);
+          next(err);
+        } else {
           res.send(items);
         }
       });
@@ -165,11 +165,11 @@ router.get("/getItems", checkToken, (req, res) => {
   });
 });
 
-router.post("/addOrder", checkToken, (req, res) => {
+router.post("/addOrder", checkToken, (req, res, next) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      next(err);
     } else {
       const order = req.body;
       const newOrder = {
@@ -182,7 +182,7 @@ router.post("/addOrder", checkToken, (req, res) => {
       addingOrder.save((err, order) => {
         if (err) {
           console.log(err);
-          res.send(err);
+          next(err);
         } else {
           res.send(order);
         }
@@ -191,16 +191,18 @@ router.post("/addOrder", checkToken, (req, res) => {
   });
 });
 
-router.delete("/deleteOrder/:orderId", checkToken, (req, res) => {
+router.delete("/deleteOrder/:orderId", checkToken, (req, res, next) => {
   const id = req.params.orderId;
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      next(err);
     } else {
       Order.deleteOne({ _id: id }, err => {
-        if (err) res.send(err);
-        else {
+        if (err) {
+          res.send(err);
+          next(err);
+        } else {
           res.sendStatus(200);
         }
       });
@@ -232,7 +234,7 @@ function checkToken(req, res, next) {
     req.token = token;
     next();
   } else {
-    res.send({ error: "Access denied! Please login again" });
+    throw new Error("Acess denied! Please login again");
   }
 }
 
