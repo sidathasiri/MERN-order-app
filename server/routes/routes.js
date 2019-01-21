@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var jwt = require("jsonwebtoken");
+var passwordHash = require("password-hash");
 
 var User = require("../../models/User");
 var Item = require("../../models/Item");
@@ -28,7 +29,7 @@ router.post("/register", (req, res) => {
       } else {
         const newUser = new User();
         newUser.email = email;
-        newUser.password = password;
+        newUser.password = passwordHash.generate(password);
         newUser.save((err, user) => {
           if (err) {
             console.log(err);
@@ -57,23 +58,29 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email, password }, (err, user) => {
+  User.findOne({ email }, (err, user) => {
     if (err) console.log(err);
     else {
       if (user) {
         console.log(user);
-        jwt.sign(
-          { email: user.email, password: user.password },
-          "secret",
-          function(err, token) {
-            if (err) console.log(err);
-            else {
-              console.log(token);
-              res.send({ token });
+        if (passwordHash.verify(password, user.password)) {
+          jwt.sign(
+            { email: user.email, password: user.password },
+            "secret",
+            function(err, token) {
+              if (err) console.log(err);
+              else {
+                console.log(token);
+                res.send({ token });
+              }
             }
-          }
-        );
+          );
+        } else {
+          console.log("wrong username or password");
+          res.send({ error: "Wrong email or password!" });
+        }
       } else {
+        console.log("wrong username or password");
         res.send({ error: "Wrong email or password!" });
       }
     }
