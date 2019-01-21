@@ -97,13 +97,13 @@ router.get("/getOrders", checkToken, (req, res) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      res.send({ error: "Access denied! Please login again" });
     } else {
       Order.find({ user: user.email }, (err, orders) => {
-        if (err) console.log(err);
-        else {
-          // console.log("sending orders");
-          // console.log(orders);
+        if (err) {
+          console.log(err);
+          res.send({ error: "Server Error! Please try again later" });
+        } else {
           res.send(orders);
         }
       });
@@ -115,12 +115,18 @@ router.get("/getOrder/:id", checkToken, (req, res) => {
   jwt.verify(req.token, "secret", (err, user) => {
     if (err) {
       console.log("Access denied! " + err);
-      res.sendStatus(403);
+      res.send({ error: "Access denied! Please login again" });
     } else {
       Order.findOne({ _id: req.params.id }, (err, order) => {
-        if (err) console.log(err);
-        else {
-          res.send(order);
+        if (err) {
+          console.log(err);
+          res.send({ error: "Server Error! Try again" });
+        } else {
+          if (order) {
+            res.send(order);
+          } else {
+            res.send({ error: "No such order found!" });
+          }
         }
       });
     }
@@ -226,7 +232,7 @@ function checkToken(req, res, next) {
     req.token = token;
     next();
   } else {
-    res.send({ error: "Please try again later" });
+    res.send({ error: "Access denied! Please login again" });
   }
 }
 

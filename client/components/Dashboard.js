@@ -7,7 +7,8 @@ export default class Dashboard extends Component {
     super(props);
 
     this.state = {
-      orders: []
+      orders: [],
+      error: ""
     };
   }
 
@@ -22,7 +23,10 @@ export default class Dashboard extends Component {
           orders: response.data
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({ error: err });
+      });
   }
 
   deleteOrder(orderId) {
@@ -56,6 +60,11 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div className="container">
+        {this.state.error ? (
+          <div className="alert alert-danger" role="alert">
+            {this.state.error}
+          </div>
+        ) : null}
         <Link
           className="btn btn-primary"
           style={{ marginTop: 20, marginBottom: 20, marginLeft: 1000 }}

@@ -10,7 +10,8 @@ export default class Order extends Component {
       order: {
         items: []
       },
-      showAddItem: false
+      showAddItem: false,
+      error: ""
     };
   }
 
@@ -19,11 +20,17 @@ export default class Order extends Component {
       method: "get",
       url: `/getOrder/${orderId}`,
       headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    }).then(response => {
-      this.setState({
-        order: response.data
+    })
+      .then(response => {
+        this.setState({
+          order: response.data
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: err
+        });
       });
-    });
   }
 
   componentDidMount() {
@@ -209,6 +216,11 @@ export default class Order extends Component {
     }
     return (
       <div className="container">
+        {this.state.error ? (
+          <div className="alert alert-danger" role="alert">
+            {this.state.error}
+          </div>
+        ) : null}
         <Link
           className="btn btn-primary"
           style={{ marginTop: 20, marginBottom: 20, marginLeft: 1040 }}
