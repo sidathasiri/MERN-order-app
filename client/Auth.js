@@ -10,9 +10,13 @@ module.exports = {
         })
         .then(response => {
           const token = response.data.token;
+          console.log(response);
+          if (response.data.error) {
+            reject(response.data.error);
+          }
           if (token) {
             localStorage.authToken = token;
-            resolve(isAuthorized);
+            resolve(true);
           } else {
             reject("Wrong username or Password");
           }
@@ -38,10 +42,9 @@ module.exports = {
           const { error, token } = response.data;
           if (error) {
             reject(error);
-            isAuthorized = false;
           } else {
             localStorage.authToken = token;
-            resolve(isAuthorized);
+            resolve(true);
           }
         })
         .catch(function(error) {

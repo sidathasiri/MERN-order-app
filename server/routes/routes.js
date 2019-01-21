@@ -18,7 +18,7 @@ router.post("/register", (req, res) => {
     if (err) {
       console.log(err);
       res.send({
-        error: "Server Error!"
+        error: "Server Error! Try again later"
       });
     } else {
       if (user) {
@@ -34,7 +34,7 @@ router.post("/register", (req, res) => {
           if (err) {
             console.log(err);
             res.send({
-              error: "Server Error!"
+              error: "Server Error! Try again later"
             });
           } else {
             console.log(`User saved`);
@@ -42,8 +42,10 @@ router.post("/register", (req, res) => {
               { email: newUser.email, password: newUser.password },
               "secret",
               function(err, token) {
-                if (err) console.log(err);
-                else {
+                if (err) {
+                  console.log(err);
+                  res.send({ error: "Server Error! Try again later" });
+                } else {
                   console.log(token);
                   res.send({ token });
                 }
@@ -59,8 +61,10 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
   User.findOne({ email }, (err, user) => {
-    if (err) console.log(err);
-    else {
+    if (err) {
+      console.log(err);
+      res.send({ error: "Server Error! Try again later" });
+    } else {
       if (user) {
         console.log(user);
         if (passwordHash.verify(password, user.password)) {
@@ -68,8 +72,10 @@ router.post("/login", (req, res) => {
             { email: user.email, password: user.password },
             "secret",
             function(err, token) {
-              if (err) console.log(err);
-              else {
+              if (err) {
+                console.log(err);
+                res.send({ error: "Server Error! Try again later" });
+              } else {
                 console.log(token);
                 res.send({ token });
               }
@@ -220,8 +226,7 @@ function checkToken(req, res, next) {
     req.token = token;
     next();
   } else {
-    //If header is undefined return Forbidden (403)
-    res.sendStatus(403);
+    res.send({ error: "Please try again later" });
   }
 }
 
