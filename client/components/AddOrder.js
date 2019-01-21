@@ -38,8 +38,10 @@ export default class AddOrder extends Component {
 
   handleItemSelect(e) {
     let id = e.target.value;
+    console.log(id);
     this.setState({
-      seletedItem: this.state.items.filter(item => item._id == id)[0]
+      seletedItem: this.state.items.filter(item => item._id == id)[0],
+      selectedItemId: id
     });
   }
 
