@@ -130,6 +130,18 @@ export default class AddOrder extends Component {
     });
   }
 
+  goBack() {
+    let confirmation = confirm(
+      "Your order is not saved!\n Are you sure you want to leave?"
+    );
+
+    if (confirmation) {
+      this.setState({
+        toDashboard: true
+      });
+    }
+  }
+
   render() {
     if (this.state.toDashboard) {
       return <Redirect to="/dashboard" />;
@@ -144,13 +156,20 @@ export default class AddOrder extends Component {
         <div className="container">
           <h1>
             Create New Order{" "}
-            <Link
+            {/* <Link
               to="/dashboard"
               style={{ marginLeft: 640 }}
               className="btn btn-primary"
             >
               Back
-            </Link>
+            </Link> */}
+            <button
+              onClick={this.goBack.bind(this)}
+              className="btn btn-primary"
+              style={{ marginLeft: 640 }}
+            >
+              Back
+            </button>
           </h1>
           <hr />
 
