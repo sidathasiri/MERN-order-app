@@ -8,7 +8,8 @@ export default class AddItem extends Component {
       items: [],
       seletedItem: {},
       seletedItemQty: 0,
-      selectedItemId: ""
+      selectedItemId: "",
+      error: ""
     };
   }
 
@@ -24,7 +25,7 @@ export default class AddItem extends Component {
           selectedItemId: response.data[0]._id
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => this.setState({ error: err }));
   }
 
   handleItemSelect(e) {
@@ -51,14 +52,6 @@ export default class AddItem extends Component {
           item => item._id == this.state.selectedItemId
         )[0];
       }
-      console.log("new item");
-      console.log(this.state.selectedItemId);
-      console.log(
-        this.state.items.filter(
-          item => item._id == this.state.selectedItemId
-        )[0]
-      );
-      console.log(newItem);
       this.props.addNewItem(newItem);
       this.setState({
         error: ""

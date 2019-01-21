@@ -33,12 +33,11 @@ export default class AddOrder extends Component {
           selectedItemId: response.data[0]._id
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => this.setState({ error: err }));
   }
 
   handleItemSelect(e) {
     let id = e.target.value;
-    console.log(id);
     this.setState({
       seletedItem: this.state.items.filter(item => item._id == id)[0],
       selectedItemId: id
@@ -116,7 +115,7 @@ export default class AddOrder extends Component {
         });
       })
       .catch(function(error) {
-        console.log(error);
+        this.setState({ error });
       });
   }
 
@@ -158,13 +157,6 @@ export default class AddOrder extends Component {
         <div className="container">
           <h1>
             Create New Order{" "}
-            {/* <Link
-              to="/dashboard"
-              style={{ marginLeft: 640 }}
-              className="btn btn-primary"
-            >
-              Back
-            </Link> */}
             <button
               onClick={this.goBack.bind(this)}
               className="btn btn-primary"
