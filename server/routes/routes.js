@@ -33,7 +33,7 @@ router.post("/register", (req, res) => {
           if (err) {
             console.log(err);
             res.send({
-              error: "User already exists!"
+              error: "Server Error!"
             });
           } else {
             console.log(`User saved`);

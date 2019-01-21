@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 var axios = require("axios");
 import AddItem from "./AddItem";
-import { resolve, reject } from "q";
 
 export default class Order extends Component {
   constructor(props) {
@@ -11,8 +10,6 @@ export default class Order extends Component {
       order: {
         items: []
       },
-      isItemsChanged: false,
-      toDashboard: false,
       showAddItem: false
     };
   }
@@ -23,8 +20,6 @@ export default class Order extends Component {
       url: `/getOrder/${orderId}`,
       headers: { Authorization: `Bearer ${localStorage.authToken}` }
     }).then(response => {
-      console.log("fetched order");
-      console.log(response.data);
       this.setState({
         order: response.data
       });
@@ -37,9 +32,6 @@ export default class Order extends Component {
   }
 
   handleItemIncrease(item) {
-    this.setState({
-      isItemsChanged: true
-    });
     let currentState = this.state.order;
     console.log(item);
     for (let i = 0; i < currentState.items.length; i++) {
@@ -52,14 +44,14 @@ export default class Order extends Component {
       {
         order: currentState
       },
-      () => this.findTotal()
+      () => {
+        this.findTotal();
+        this.updateOrder();
+      }
     );
   }
 
   handleItemDecrease(item) {
-    this.setState({
-      isItemsChanged: true
-    });
     let currentState = this.state.order;
     for (let i = 0; i < currentState.items.length; i++) {
       if (currentState.items[i].item._id == item.item._id) {
@@ -77,6 +69,7 @@ export default class Order extends Component {
       },
       () => {
         this.findTotal();
+        this.updateOrder();
       }
     );
   }
@@ -94,11 +87,11 @@ export default class Order extends Component {
 
     this.setState(
       {
-        order: currentOrder,
-        isItemsChanged: true
+        order: currentOrder
       },
       () => {
         this.findTotal();
+        this.updateOrder();
       }
     );
   }
@@ -156,9 +149,7 @@ export default class Order extends Component {
         .then(function(response) {
           console.log(response);
           if (response.status == 200) {
-            self.setState({
-              toDashboard: true
-            });
+            console.log("update succesful");
           }
         })
         .catch(function(error) {
@@ -167,9 +158,7 @@ export default class Order extends Component {
     } else {
       this.deleteOrder(this.state.order._id).then(success => {
         if (success) {
-          self.setState({
-            toDashboard: true
-          });
+          console.log("delete success");
         }
       });
     }
@@ -209,9 +198,7 @@ export default class Order extends Component {
       },
       () => {
         this.findTotal();
-        this.setState({
-          isItemsChanged: true
-        });
+        this.updateOrder();
       }
     );
   }
@@ -243,15 +230,6 @@ export default class Order extends Component {
             >
               {this.state.showAddItem ? "Close Add Item" : "Add Item"}
             </button>
-            {this.state.isItemsChanged ? (
-              <button
-                onClick={this.updateOrder.bind(this)}
-                className="btn btn-success"
-                style={{ height: 40, marginTop: 20, marginBottom: 20 }}
-              >
-                Update
-              </button>
-            ) : null}
           </div>
           <h1>Order ID: {this.state.order._id}</h1>
           <h3>Total Price: {this.state.order.price}</h3>
