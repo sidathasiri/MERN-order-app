@@ -30,7 +30,6 @@ export default class Dashboard extends Component {
   }
 
   deleteOrder(orderId) {
-    console.log(orderId);
     axios
       .delete("/deleteOrder/" + orderId, {
         headers: { Authorization: `Bearer ${localStorage.authToken}` }
@@ -47,10 +46,10 @@ export default class Dashboard extends Component {
             orders: newArr
           });
         } else {
-          alert("Error occurred in delete");
+          this.setState({ error: "Error occurred in delete" });
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => this.setState({ error: err }));
   }
 
   componentDidMount() {

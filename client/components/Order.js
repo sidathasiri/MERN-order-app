@@ -40,7 +40,6 @@ export default class Order extends Component {
 
   handleItemIncrease(item) {
     let currentState = this.state.order;
-    console.log(item);
     for (let i = 0; i < currentState.items.length; i++) {
       if (currentState.items[i].item._id == item.item._id) {
         currentState.items[i].qty = parseInt(currentState.items[i].qty) + 1;
@@ -104,7 +103,6 @@ export default class Order extends Component {
   }
 
   deleteOrder(orderId) {
-    console.log(orderId);
     return new Promise((resolve, reject) => {
       axios
         .delete("/deleteOrder/" + orderId, {
@@ -112,15 +110,12 @@ export default class Order extends Component {
         })
         .then(response => {
           if (response.status == 200) {
-            console.log("deleted succesfully");
             resolve(true);
           } else {
-            reject(false);
-            alert("Error occurred in delete");
+            reject("Error occurred in delete");
           }
         })
         .catch(err => {
-          console.log(err);
           reject(err);
         });
     });
@@ -142,8 +137,6 @@ export default class Order extends Component {
     self = this;
     if (this.state.order.items.length != 0) {
       this.findTotal();
-      console.log("inside update");
-      console.log(this.state);
       axios("/updateOrder", {
         method: "put",
         headers: {
@@ -154,20 +147,21 @@ export default class Order extends Component {
         }
       })
         .then(function(response) {
-          console.log(response);
           if (response.status == 200) {
             console.log("update succesful");
           }
         })
         .catch(function(error) {
-          console.log(error);
+          this.setState({ error });
         });
     } else {
-      this.deleteOrder(this.state.order._id).then(success => {
-        if (success) {
-          console.log("delete success");
-        }
-      });
+      this.deleteOrder(this.state.order._id)
+        .then(success => {
+          if (success) {
+            console.log("delete successful");
+          }
+        })
+        .catch(err => this.setState({ error: err }));
     }
   }
 
