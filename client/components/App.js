@@ -5,7 +5,7 @@ import "../css/App.css";
 import Login from "./Login";
 import Navbar from "./Navbar";
 import Register from "./Register";
-import Auth from "../Auth";
+import Auth from "../Services/AuthService";
 
 class App extends Component {
   render() {

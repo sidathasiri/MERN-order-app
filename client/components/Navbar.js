@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Auth from "../Auth";
+import Auth from "../Services/AuthService";
 
 export default class Navbar extends Component {
   logout() {

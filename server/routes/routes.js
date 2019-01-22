@@ -38,19 +38,15 @@ router.post("/register", (req, res) => {
             });
           } else {
             console.log(`User saved`);
-            jwt.sign(
-              { email: newUser.email, password: newUser.password },
-              "secret",
-              function(err, token) {
-                if (err) {
-                  console.log(err);
-                  res.send({ error: "Server Error! Try again later" });
-                } else {
-                  console.log(token);
-                  res.send({ token });
-                }
+            jwt.sign({ email: newUser.email }, "secret", function(err, token) {
+              if (err) {
+                console.log(err);
+                res.send({ error: "Server Error! Try again later" });
+              } else {
+                console.log(token);
+                res.send({ token });
               }
-            );
+            });
           }
         });
       }
@@ -68,19 +64,15 @@ router.post("/login", (req, res) => {
       if (user) {
         console.log(user);
         if (passwordHash.verify(password, user.password)) {
-          jwt.sign(
-            { email: user.email, password: user.password },
-            "secret",
-            function(err, token) {
-              if (err) {
-                console.log(err);
-                res.send({ error: "Server Error! Try again later" });
-              } else {
-                console.log(token);
-                res.send({ token });
-              }
+          jwt.sign({ email: user.email }, "secret", function(err, token) {
+            if (err) {
+              console.log(err);
+              res.send({ error: "Server Error! Try again later" });
+            } else {
+              console.log(token);
+              res.send({ token });
             }
-          );
+          });
         } else {
           console.log("wrong username or password");
           res.send({ error: "Wrong email or password!" });
