@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ItemService from "../Services/ItemService";
 var axios = require("axios");
 
 export default class AddItem extends Component {
@@ -14,15 +15,25 @@ export default class AddItem extends Component {
   }
 
   componentDidMount() {
-    axios({
-      method: "get",
-      url: "/getItems",
-      headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    })
-      .then(response => {
+    // axios({
+    //   method: "get",
+    //   url: "/getItems",
+    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
+    // })
+    //   .then(response => {
+    //     this.setState({
+    //       items: response.data,
+    //       selectedItemId: response.data[0]._id
+    //     });
+    //   })
+    //   .catch(err => this.setState({ error: err }));
+    ItemService.getItems()
+      .then(items => {
+        console.log(items);
         this.setState({
-          items: response.data,
-          selectedItemId: response.data[0]._id
+          items: items,
+          selectedItemId: items[0]._id,
+          seletedItem: items[0]
         });
       })
       .catch(err => this.setState({ error: err }));
@@ -31,7 +42,8 @@ export default class AddItem extends Component {
   handleItemSelect(e) {
     let id = e.target.value;
     this.setState({
-      seletedItem: this.state.items.filter(item => item._id == id)[0]
+      seletedItem: this.state.items.filter(item => item._id == id)[0],
+      selectedItemId: id
     });
   }
 
