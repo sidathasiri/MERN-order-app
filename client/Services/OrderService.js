@@ -39,5 +39,26 @@ module.exports = {
         })
         .catch(err => reject(err));
     });
+  },
+
+  addOrder: function(order) {
+    return new Promise((resolve, reject) => {
+      axios("/addOrder", {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${localStorage.authToken}`
+        },
+        data: order
+      })
+        .then(function(response) {
+          console.log(response);
+          if (response.status == 200) {
+            resolve(true);
+          }
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
   }
 };

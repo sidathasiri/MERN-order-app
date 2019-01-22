@@ -3,6 +3,8 @@ import { Redirect, Link } from "react-router-dom";
 var axios = require("axios");
 
 import ItemList from "./ItemList";
+import ItemService from "../Services/ItemService";
+import OrderService from "../Services/OrderService";
 
 export default class AddOrder extends Component {
   constructor(props) {
@@ -22,18 +24,24 @@ export default class AddOrder extends Component {
   }
 
   componentDidMount() {
-    axios({
-      method: "get",
-      url: "/getItems",
-      headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    })
-      .then(response => {
-        this.setState({
-          items: response.data,
-          selectedItemId: response.data[0]._id
-        });
-      })
-      .catch(err => this.setState({ error: err }));
+    // axios({
+    //   method: "get",
+    //   url: "/getItems",
+    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
+    // })
+    //   .then(response => {
+    //     this.setState({
+    //       items: response.data,
+    //       selectedItemId: response.data[0]._id
+    //     });
+    //   })
+    //   .catch(err => this.setState({ error: err }));
+    ItemService.getItems().then(items => {
+      this.setState({
+        items: items,
+        selectedItemId: items[0]._id
+      });
+    });
   }
 
   handleItemSelect(e) {
@@ -96,27 +104,41 @@ export default class AddOrder extends Component {
   }
 
   submitOrder() {
-    self = this;
-    axios("/addOrder", {
-      method: "post",
-      headers: {
-        Authorization: `Bearer ${localStorage.authToken}`
-      },
-      data: {
-        items: this.state.addedItems,
-        total: this.state.total,
-        timestamp: new Date().toString().split("GMT")[0]
-      }
-    })
-      .then(function(response) {
-        console.log(response);
-        self.setState({
-          toDashboard: true
-        });
+    // self = this;
+    // axios("/addOrder", {
+    //   method: "post",
+    //   headers: {
+    //     Authorization: `Bearer ${localStorage.authToken}`
+    //   },
+    // data: {
+    //   items: this.state.addedItems,
+    //   total: this.state.total,
+    //   timestamp: new Date().toString().split("GMT")[0]
+    // }
+    // })
+    //   .then(function(response) {
+    //     console.log(response);
+    //     self.setState({
+    //       toDashboard: true
+    //     });
+    //   })
+    //   .catch(function(error) {
+    //     this.setState({ error });
+    //   });
+    let order = {
+      items: this.state.addedItems,
+      total: this.state.total,
+      timestamp: new Date().toString().split("GMT")[0]
+    };
+    OrderService.addOrder(order)
+      .then(result => {
+        if (result == true) {
+          this.setState({
+            toDashboard: true
+          });
+        }
       })
-      .catch(function(error) {
-        this.setState({ error });
-      });
+      .catch(err => this.setState({ error: err }));
   }
 
   findTotal() {
