@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 var axios = require("axios");
 import AddItem from "./AddItem";
+import OrderService from "../Services/OrderService";
 
 export default class Order extends Component {
   constructor(props) {
@@ -16,26 +17,32 @@ export default class Order extends Component {
   }
 
   getOrder(orderId) {
-    axios({
-      method: "get",
-      url: `/getOrder/${orderId}`,
-      headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    })
-      .then(response => {
-        this.setState({
-          order: response.data
-        });
-      })
-      .catch(err => {
-        this.setState({
-          error: err
-        });
-      });
+    // axios({
+    //   method: "get",
+    //   url: `/getOrder/${orderId}`,
+    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
+    // })
+    //   .then(response => {
+    //     this.setState({
+    //       order: response.data
+    //     });
+    //   })
+    //   .catch(err => {
+    //     this.setState({
+    //       error: err
+    //     });
+    //   });
   }
 
   componentDidMount() {
     const orderId = this.props.match.params.orderId;
-    this.getOrder(orderId);
+    OrderService.getOrderById(orderId)
+      .then(order => {
+        this.setState({
+          order
+        });
+      })
+      .catch(err => this.UNSAFE_componentWillMount.setState({ error: err }));
   }
 
   handleItemIncrease(item) {
@@ -103,22 +110,15 @@ export default class Order extends Component {
   }
 
   deleteOrder(orderId) {
-    return new Promise((resolve, reject) => {
-      axios
-        .delete("/deleteOrder/" + orderId, {
-          headers: { Authorization: `Bearer ${localStorage.authToken}` }
-        })
-        .then(response => {
-          if (response.status == 200) {
-            resolve(true);
-          } else {
-            reject("Error occurred in delete");
-          }
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
+    OrderService.deleteOrder(orderId)
+      .then(success => {
+        if (success) {
+          console.log("delete succesful");
+        } else {
+          this.setState({ error: "Error occurred in delete" });
+        }
+      })
+      .catch(err => this.setState({ error: err }));
   }
 
   findTotal() {
@@ -135,6 +135,7 @@ export default class Order extends Component {
 
   updateOrder() {
     self = this;
+    console.log("in deleteeeeee");
     if (this.state.order.items.length != 0) {
       this.findTotal();
       axios("/updateOrder", {
@@ -155,13 +156,8 @@ export default class Order extends Component {
           this.setState({ error });
         });
     } else {
-      this.deleteOrder(this.state.order._id)
-        .then(success => {
-          if (success) {
-            console.log("delete successful");
-          }
-        })
-        .catch(err => this.setState({ error: err }));
+      console.log("now deleting");
+      this.deleteOrder(this.state.order._id);
     }
   }
 

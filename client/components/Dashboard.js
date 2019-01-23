@@ -62,8 +62,23 @@ export default class Dashboard extends Component {
     //     }
     //   })
     //   .catch(err => this.setState({ error: err }));
+    ////////////////////////////
     OrderService.deleteOrder(orderId, this.state.orders)
-      .then(orders => this.setState({ orders }))
+      .then(success => {
+        if (success) {
+          let newArr = [];
+          for (let i = 0; i < this.state.orders.length; i++) {
+            if (this.state.orders[i]._id != orderId) {
+              newArr.push(this.state.orders[i]);
+            }
+          }
+          this.setState({
+            orders: newArr
+          });
+        } else {
+          this.setState({ error: "Error occurred in delete" });
+        }
+      })
       .catch(err => this.setState({ error: err }));
   }
 

@@ -18,7 +18,23 @@ module.exports = {
     });
   },
 
-  deleteOrder: function(orderId, orders) {
+  getOrderById: function(orderId) {
+    return new Promise((resolve, reject) => {
+      axios({
+        method: "get",
+        url: `/getOrder/${orderId}`,
+        headers: { Authorization: `Bearer ${localStorage.authToken}` }
+      })
+        .then(response => {
+          resolve(response.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  },
+
+  deleteOrder: function(orderId) {
     return new Promise((resolve, reject) => {
       axios
         .delete("/deleteOrder/" + orderId, {
@@ -26,13 +42,7 @@ module.exports = {
         })
         .then(response => {
           if (response.status == 200) {
-            let newArr = [];
-            for (let i = 0; i < orders.length; i++) {
-              if (orders[i]._id != orderId) {
-                newArr.push(orders[i]);
-              }
-            }
-            resolve(newArr);
+            resolve(true);
           } else {
             reject("Error occurred in delete");
           }
