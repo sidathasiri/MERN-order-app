@@ -14,20 +14,6 @@ export default class Dashboard extends Component {
   }
 
   getOrders() {
-    // axios({
-    //   method: "get",
-    //   url: "/getOrders",
-    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    // })
-    //   .then(response => {
-    //     this.setState({
-    //       orders: response.data
-    //     });
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //     this.setState({ error: err });
-    //   });
     OrderService.getOrders()
       .then(orders => {
         this.setState({
@@ -42,27 +28,6 @@ export default class Dashboard extends Component {
   }
 
   deleteOrder(orderId) {
-    // axios
-    //   .delete("/deleteOrder/" + orderId, {
-    //     headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    //   })
-    //   .then(response => {
-    //     if (response.status == 200) {
-    //       let newArr = [];
-    //       for (let i = 0; i < this.state.orders.length; i++) {
-    //         if (this.state.orders[i]._id != orderId) {
-    //           newArr.push(this.state.orders[i]);
-    //         }
-    //       }
-    //       this.setState({
-    //         orders: newArr
-    //       });
-    //     } else {
-    //       this.setState({ error: "Error occurred in delete" });
-    //     }
-    //   })
-    //   .catch(err => this.setState({ error: err }));
-    ////////////////////////////
     OrderService.deleteOrder(orderId, this.state.orders)
       .then(success => {
         if (success) {

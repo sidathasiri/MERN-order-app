@@ -24,18 +24,6 @@ export default class AddOrder extends Component {
   }
 
   componentDidMount() {
-    // axios({
-    //   method: "get",
-    //   url: "/getItems",
-    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    // })
-    //   .then(response => {
-    //     this.setState({
-    //       items: response.data,
-    //       selectedItemId: response.data[0]._id
-    //     });
-    //   })
-    //   .catch(err => this.setState({ error: err }));
     ItemService.getItems().then(items => {
       this.setState({
         items: items,
@@ -104,27 +92,6 @@ export default class AddOrder extends Component {
   }
 
   submitOrder() {
-    // self = this;
-    // axios("/addOrder", {
-    //   method: "post",
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.authToken}`
-    //   },
-    // data: {
-    //   items: this.state.addedItems,
-    //   total: this.state.total,
-    //   timestamp: new Date().toString().split("GMT")[0]
-    // }
-    // })
-    //   .then(function(response) {
-    //     console.log(response);
-    //     self.setState({
-    //       toDashboard: true
-    //     });
-    //   })
-    //   .catch(function(error) {
-    //     this.setState({ error });
-    //   });
     let order = {
       items: this.state.addedItems,
       total: this.state.total,

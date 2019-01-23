@@ -16,24 +16,6 @@ export default class Order extends Component {
     };
   }
 
-  getOrder(orderId) {
-    // axios({
-    //   method: "get",
-    //   url: `/getOrder/${orderId}`,
-    //   headers: { Authorization: `Bearer ${localStorage.authToken}` }
-    // })
-    //   .then(response => {
-    //     this.setState({
-    //       order: response.data
-    //     });
-    //   })
-    //   .catch(err => {
-    //     this.setState({
-    //       error: err
-    //     });
-    //   });
-  }
-
   componentDidMount() {
     const orderId = this.props.match.params.orderId;
     OrderService.getOrderById(orderId)
@@ -134,8 +116,6 @@ export default class Order extends Component {
   }
 
   updateOrder() {
-    self = this;
-    console.log("in deleteeeeee");
     if (this.state.order.items.length != 0) {
       this.findTotal();
       axios("/updateOrder", {
@@ -156,7 +136,6 @@ export default class Order extends Component {
           this.setState({ error });
         });
     } else {
-      console.log("now deleting");
       this.deleteOrder(this.state.order._id);
     }
   }
@@ -172,7 +151,6 @@ export default class Order extends Component {
     // else: append new one
 
     let currentItems = this.state.order.items;
-    console.log(currentItems);
     let alreadyExisting = false;
     for (let i = 0; i < currentItems.length; i++) {
       if (currentItems[i].item._id == newItem.item._id) {

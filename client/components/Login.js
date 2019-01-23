@@ -35,13 +35,11 @@ export default class Login extends Component {
     if (this.isFormValid()) {
       Auth.login(this.state.email, this.state.password)
         .then(isAuthenticated => {
-          console.log(isAuthenticated);
           let currentState = this.state;
           currentState.authenticated = isAuthenticated;
           this.setState(currentState);
         })
         .catch(err => {
-          console.log(err);
           let errors = this.state.errors;
           errors.push(err);
           this.setState(errors);
