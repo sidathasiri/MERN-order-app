@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
-var axios = require("axios");
-
 import ItemList from "./ItemList";
 import ItemService from "../Services/ItemService";
 import OrderService from "../Services/OrderService";

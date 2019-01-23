@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import "../css/App.css";
-import Login from "./Login";
-import Navbar from "./Navbar";
-import Register from "./Register";
 import Auth from "../Services/AuthService";
 
 class App extends Component {

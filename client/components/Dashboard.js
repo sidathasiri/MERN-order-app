@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import OrderService from "../Services/OrderService";
-var axios = require("axios");
 
 export default class Dashboard extends Component {
   constructor(props) {

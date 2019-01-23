@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ItemService from "../Services/ItemService";
-var axios = require("axios");
 
 export default class AddItem extends Component {
   constructor(props) {
