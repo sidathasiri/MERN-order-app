@@ -37,13 +37,11 @@ router.post("/register", (req, res) => {
               error: "Server Error! Try again later"
             });
           } else {
-            console.log(`User saved`);
             jwt.sign({ email: newUser.email }, "secret", function(err, token) {
               if (err) {
                 console.log(err);
                 res.send({ error: "Server Error! Try again later" });
               } else {
-                console.log(token);
                 res.send({ token });
               }
             });
@@ -62,14 +60,12 @@ router.post("/login", (req, res) => {
       res.send({ error: "Server Error! Try again later" });
     } else {
       if (user) {
-        console.log(user);
         if (passwordHash.verify(password, user.password)) {
           jwt.sign({ email: user.email }, "secret", function(err, token) {
             if (err) {
               console.log(err);
               res.send({ error: "Server Error! Try again later" });
             } else {
-              console.log(token);
               res.send({ token });
             }
           });

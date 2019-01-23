@@ -10,7 +10,6 @@ module.exports = {
         })
         .then(response => {
           const token = response.data.token;
-          console.log(response);
           if (response.data.error) {
             reject(response.data.error);
           }

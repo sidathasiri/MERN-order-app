@@ -61,7 +61,6 @@ module.exports = {
         data: order
       })
         .then(function(response) {
-          console.log(response);
           if (response.status == 200) {
             resolve(true);
           }
