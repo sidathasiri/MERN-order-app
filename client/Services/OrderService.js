@@ -69,5 +69,27 @@ module.exports = {
           reject(error);
         });
     });
+  },
+
+  updateOrder: function(order) {
+    return new Promise((resolve, reject) => {
+      axios("/updateOrder", {
+        method: "put",
+        headers: {
+          Authorization: `Bearer ${localStorage.authToken}`
+        },
+        data: {
+          order
+        }
+      })
+        .then(function(response) {
+          if (response.status == 200) {
+            resolve(true);
+          }
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
   }
 };

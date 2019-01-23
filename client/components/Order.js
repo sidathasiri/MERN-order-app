@@ -152,23 +152,32 @@ export default class Order extends Component {
     //if there are items in order: update the order. Otherwise: delete the order
     if (this.state.order.items.length != 0) {
       this.findTotal();
-      axios("/updateOrder", {
-        method: "put",
-        headers: {
-          Authorization: `Bearer ${localStorage.authToken}`
-        },
-        data: {
-          order: this.state.order
-        }
-      })
-        .then(function(response) {
-          if (response.status == 200) {
-            console.log("update succesful");
+      // axios("/updateOrder", {
+      //   method: "put",
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.authToken}`
+      //   },
+      //   data: {
+      //     order: this.state.order
+      //   }
+      // })
+      //   .then(function(response) {
+      //     if (response.status == 200) {
+      //       console.log("update succesful");
+      //     }
+      //   })
+      //   .catch(function(error) {
+      //     this.setState({ error });
+      //   });
+
+      console.log("now updatingggggggg");
+      OrderService.updateOrder(this.state.order)
+        .then(success => {
+          if (success == true) {
+            console.log("Update successfull");
           }
         })
-        .catch(function(error) {
-          this.setState({ error });
-        });
+        .catch(err => this.setState({ error: err }));
     } else {
       this.deleteOrder(this.state.order._id);
     }
