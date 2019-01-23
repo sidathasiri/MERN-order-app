@@ -4,6 +4,9 @@ var axios = require("axios");
 import AddItem from "./AddItem";
 import OrderService from "../Services/OrderService";
 
+/**
+ * Component corresponding to the display details of an order. Accepts the orderId as a param via react router
+ */
 export default class Order extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +19,9 @@ export default class Order extends Component {
     };
   }
 
+  /**
+   * @description Loads the order data using orderId via the OrderService
+   */
   componentDidMount() {
     const orderId = this.props.match.params.orderId;
     OrderService.getOrderById(orderId)
@@ -27,8 +33,13 @@ export default class Order extends Component {
       .catch(err => this.UNSAFE_componentWillMount.setState({ error: err }));
   }
 
+  /**
+   * @param {Object} item
+   * @description increases the quantity of item provided via param
+   */
   handleItemIncrease(item) {
     let currentState = this.state.order;
+    //iterate through the current items and increate the quantity of item provided
     for (let i = 0; i < currentState.items.length; i++) {
       if (currentState.items[i].item._id == item.item._id) {
         currentState.items[i].qty = parseInt(currentState.items[i].qty) + 1;
@@ -40,18 +51,25 @@ export default class Order extends Component {
         order: currentState
       },
       () => {
-        this.findTotal();
-        this.updateOrder();
+        this.findTotal(); //calculate the new total after increasing the quantity
+        this.updateOrder(); //immediatly update the db
       }
     );
   }
 
+  /**
+   * @param {Object} item
+   * @description descreases the quantity of item provided via param
+   */
   handleItemDecrease(item) {
     let currentState = this.state.order;
+    //iterates through the current items and decrease the quantity of corresponding item
     for (let i = 0; i < currentState.items.length; i++) {
       if (currentState.items[i].item._id == item.item._id) {
         if (parseInt(currentState.items[i].qty) > 0) {
+          //only decreases if the current quantity is positive
           currentState.items[i].qty = parseInt(currentState.items[i].qty) - 1;
+          //removes the item if the new quantity is zero
           if (currentState.items[i].qty == 0) {
             this.removeItem(currentState.items[i].item._id);
           }
@@ -63,15 +81,20 @@ export default class Order extends Component {
         order: currentState
       },
       () => {
-        this.findTotal();
-        this.updateOrder();
+        this.findTotal(); //calculate the new total after increasing the quantity
+        this.updateOrder(); //immediatly update the db
       }
     );
   }
 
+  /**
+   * @param {String} itemId
+   * @description removes the item corresponding to the id provided via param
+   */
   removeItem(itemId) {
     let currentOrder = this.state.order;
     let newItems = [];
+    //iterate through current items and append to new array without the removing item
     for (let i of currentOrder.items) {
       if (i.item._id != itemId) {
         newItems.push(i);
@@ -85,12 +108,16 @@ export default class Order extends Component {
         order: currentOrder
       },
       () => {
-        this.findTotal();
-        this.updateOrder();
+        this.findTotal(); //calculate the new total after increasing the quantity
+        this.updateOrder(); //immediatly update the db
       }
     );
   }
 
+  /**
+   * @param {String} orderId
+   * @description deletes an order corresponds to the id provided in params via the OrderService
+   */
   deleteOrder(orderId) {
     OrderService.deleteOrder(orderId)
       .then(success => {
@@ -103,6 +130,9 @@ export default class Order extends Component {
       .catch(err => this.setState({ error: err }));
   }
 
+  /**
+   * @description calculates the total price of items in order
+   */
   findTotal() {
     let total = 0;
     for (let i of this.state.order.items) {
@@ -115,7 +145,11 @@ export default class Order extends Component {
     });
   }
 
+  /**
+   * @description updates the order when a modification has happend
+   */
   updateOrder() {
+    //if there are items in order: update the order. Otherwise: delete the order
     if (this.state.order.items.length != 0) {
       this.findTotal();
       axios("/updateOrder", {
@@ -140,12 +174,19 @@ export default class Order extends Component {
     }
   }
 
+  /**
+   * @description toggling the add item section in order
+   */
   addItemButtonHandler() {
     this.setState({
       showAddItem: !this.state.showAddItem
     });
   }
 
+  /**
+   * @param {Object} newItem
+   * @description Adds the new item to order. If item is existing one: increase the count. Otherwise: add as a new item
+   */
   addNewItem(newItem) {
     //if item is already existing: increase
     // else: append new one
@@ -153,6 +194,7 @@ export default class Order extends Component {
     let currentItems = this.state.order.items;
     let alreadyExisting = false;
     for (let i = 0; i < currentItems.length; i++) {
+      //if existing item, increase the count
       if (currentItems[i].item._id == newItem.item._id) {
         alreadyExisting = true;
         currentItems[i].qty =
@@ -161,6 +203,7 @@ export default class Order extends Component {
       }
     }
 
+    //if not existing, add as a new item
     if (!alreadyExisting) {
       currentItems.push(newItem);
     }
@@ -172,8 +215,8 @@ export default class Order extends Component {
         order: curretOrder
       },
       () => {
-        this.findTotal();
-        this.updateOrder();
+        this.findTotal(); //calculates the total price of current order
+        this.updateOrder(); //updates the db immediately
       }
     );
   }

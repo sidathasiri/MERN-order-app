@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import OrderService from "../Services/OrderService";
 
+/**
+ * Component corresponding to the user dashboard displaying his/her open orders
+ */
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +15,9 @@ export default class Dashboard extends Component {
     };
   }
 
+  /**
+   * fetches the open orders placed by user via OrderService
+   */
   getOrders() {
     OrderService.getOrders()
       .then(orders => {
@@ -26,18 +32,23 @@ export default class Dashboard extends Component {
       });
   }
 
+  /**
+   * @param {String} orderId
+   * @description deletes the order identified by the param orderId via OrderService
+   */
   deleteOrder(orderId) {
     OrderService.deleteOrder(orderId, this.state.orders)
       .then(success => {
         if (success) {
           let newArr = [];
+          //appends the items to the new array without the deleted item
           for (let i = 0; i < this.state.orders.length; i++) {
             if (this.state.orders[i]._id != orderId) {
               newArr.push(this.state.orders[i]);
             }
           }
           this.setState({
-            orders: newArr
+            orders: newArr //updates the items to new array
           });
         } else {
           this.setState({ error: "Error occurred in delete" });

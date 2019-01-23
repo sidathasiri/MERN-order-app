@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "../css/App.css";
 import Auth from "../Services/AuthService";
 
+/**
+ * Component corresponding the the landing page
+ */
 class App extends Component {
   render() {
     let imgUrl = "../images/background.jpeg";

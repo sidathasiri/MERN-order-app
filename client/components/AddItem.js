@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import ItemService from "../Services/ItemService";
 
+/**
+ * Component corresponding to add new item to order
+ * Accepts a function as a prop to append the new item to order
+ */
 export default class AddItem extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +29,10 @@ export default class AddItem extends Component {
       .catch(err => this.setState({ error: err }));
   }
 
+  /**
+   * @param {event} e
+   * @description updates the state with the selected item id and item object when changing in dropdown
+   */
   handleItemSelect(e) {
     let id = e.target.value;
     this.setState({
@@ -33,24 +41,32 @@ export default class AddItem extends Component {
     });
   }
 
+  /**
+   * @param {event} e
+   * @description updates the state when changing the quantity in the input field
+   */
   handleQtyChange(e) {
     this.setState({
       seletedItemQty: e.target.value
     });
   }
 
+  /**
+   * @description adds the selected item to the order using the function provided in props
+   */
   addItem() {
     if (parseInt(this.state.seletedItemQty) > 0) {
       let newItem = {
         item: this.state.seletedItem,
         qty: this.state.seletedItemQty
       };
+      //check if the newItem is not empty and set item to the item object using its id
       if (Object.keys(newItem.item).length == 0) {
         newItem.item = this.state.items.filter(
           item => item._id == this.state.selectedItemId
         )[0];
       }
-      this.props.addNewItem(newItem);
+      this.props.addNewItem(newItem); //add item to order using the provided function
       this.setState({
         error: ""
       });

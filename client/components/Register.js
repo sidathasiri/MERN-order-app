@@ -3,6 +3,9 @@ import Auth from "../Services/AuthService";
 import validator from "validator";
 import { Redirect } from "react-router-dom";
 
+/**
+ * Component corresponding to the register form
+ */
 export default class Register extends Component {
   constructor() {
     super();
@@ -14,6 +17,9 @@ export default class Register extends Component {
     };
   }
 
+  /**
+   * @description Handles the change in email and password fields and update the state
+   */
   handleChange() {
     this.setState({
       email: this.refs.email.value,
@@ -21,6 +27,10 @@ export default class Register extends Component {
     });
   }
 
+  /**
+   * @param {Object} event
+   * @description passes the login data to register user via the AuthService
+   */
   handleSubmit(event) {
     if (this.isFormValid()) {
       Auth.register(this.state.email, this.state.password)
@@ -39,6 +49,9 @@ export default class Register extends Component {
     }
   }
 
+  /**
+   * @description validates the form for email and password fields
+   */
   isFormValid() {
     let errors = [];
     if (!validator.isEmail(this.state.email)) {

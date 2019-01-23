@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+/**
+ * Component corresponding to display the item list in an order. Accepts current items in order as props
+ */
 export default class ItemList extends Component {
   constructor(props) {
     super(props);

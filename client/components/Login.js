@@ -3,6 +3,9 @@ import Auth from "../Services/AuthService";
 import { Redirect } from "react-router-dom";
 import validator from "validator";
 
+/**
+ * Component correponding to the Login form and handle authentication
+ */
 export default class Login extends Component {
   constructor() {
     super();
@@ -14,6 +17,9 @@ export default class Login extends Component {
     };
   }
 
+  /**
+   * @description Handles the change in email and password fields and update the state
+   */
   handleChange() {
     this.setState({
       email: this.refs.email.value,
@@ -21,6 +27,9 @@ export default class Login extends Component {
     });
   }
 
+  /**
+   * @description Validates the email field
+   */
   isFormValid() {
     let errors = [];
     if (!validator.isEmail(this.state.email)) {
@@ -31,6 +40,9 @@ export default class Login extends Component {
     return errors.length == 0;
   }
 
+  /**
+   * @description passes the login data for Auth service for authentication
+   */
   handleLogin() {
     if (this.isFormValid()) {
       Auth.login(this.state.email, this.state.password)
