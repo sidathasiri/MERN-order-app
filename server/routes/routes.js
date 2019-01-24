@@ -212,6 +212,17 @@ router.put("/updateOrder", checkToken, (req, res) => {
   });
 });
 
+router.delete("/deleteUser/:_id", (req, res, next) => {
+  let _id = req.params._id;
+  User.deleteOne({ _id }, function(err) {
+    if (err) {
+      next(err);
+    } else {
+      res.send("Delete Succesful");
+    }
+  });
+});
+
 function checkToken(req, res, next) {
   const header = req.headers["authorization"];
 
