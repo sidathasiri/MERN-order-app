@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
 
 router.post("/register", (req, res) => {
   const { email, password } = req.body;
-
+  console.log(email + " " + password);
   User.findOne({ email }, (err, user) => {
     if (err) {
       console.log(err);
@@ -42,7 +42,7 @@ router.post("/register", (req, res) => {
                 console.log(err);
                 res.send({ error: "Server Error! Try again later" });
               } else {
-                res.send({ token });
+                res.send({ token, user });
               }
             });
           }
