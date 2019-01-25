@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
 
 router.post("/register", (req, res) => {
   const { email, password } = req.body;
-  console.log(email + " " + password);
   User.findOne({ email }, (err, user) => {
     if (err) {
       console.log(err);
@@ -66,7 +65,7 @@ router.post("/login", (req, res) => {
               console.log(err);
               res.send({ error: "Server Error! Try again later" });
             } else {
-              res.send({ token });
+              res.send({ token, user });
             }
           });
         } else {
@@ -212,9 +211,9 @@ router.put("/updateOrder", checkToken, (req, res) => {
   });
 });
 
-router.delete("/deleteUser/:_id", (req, res, next) => {
-  let _id = req.params._id;
-  User.deleteOne({ _id }, function(err) {
+router.get("/deleteUser/:email", (req, res, next) => {
+  let email = req.params.email;
+  User.deleteOne({ email }, function(err) {
     if (err) {
       next(err);
     } else {

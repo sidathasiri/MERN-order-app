@@ -25,7 +25,7 @@
   "scripts": {
     "webpack": "webpack",
     "start": "concurrently \"npm run webpack\" \"nodemon --exec babel-node -- server/server.js\"",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --forceExit --detectOpenHandles"
   },
   "eslintConfig": {
     "extends": "react-app"
